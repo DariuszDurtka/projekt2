@@ -1,10 +1,14 @@
 import java.io.IOException;
 import java.util.Scanner;
 
+// Wyjątek sprawdzający poprawność imienia – nie może zawierać spacji.
 class WrongStudentName extends Exception { }
 
-// Definicja nowego wyjątku sprawdzającego wiek studenta.
+// Wyjątek sprawdzający właściwy zakres wieku (1-99).
 class WrongAge extends Exception { }
+
+// Wyjątek sprawdzający format daty urodzenia (DD-MM-YYYY – 2-2-4 cyfry).
+class WrongDateOfBirth extends Exception { }
 
 class Main {
     public static Scanner scan = new Scanner(System.in);
@@ -32,6 +36,8 @@ class Main {
                 System.out.println("Błędne imię studenta!");
             } catch(WrongAge e) {
                 System.out.println("Błędny wiek! Poprawny wiek to liczba z przedziału 1-99.");
+            } catch(WrongDateOfBirth e) {
+                System.out.println("Błędna data urodzenia! Poprawny format: DD-MM-YYYY.");
             }
         }
     }
@@ -54,17 +60,20 @@ class Main {
         return name;
     }
 
-    // W metodzie exercise1 dodajemy walidację wieku.
-    public static void exercise1() throws IOException, WrongStudentName, WrongAge {
+    // W metodzie exercise1 dodajemy walidację wieku oraz formatu daty urodzenia.
+    public static void exercise1() throws IOException, WrongStudentName, WrongAge, WrongDateOfBirth {
         String name = ReadName();
         System.out.println("Podaj wiek: ");
         int age = scan.nextInt();
-        // Sprawdzenie poprawności wieku: 1-99
+        // Walidacja wieku – tylko przedział 1-99 jest poprawny.
         if(age < 1 || age > 99)
             throw new WrongAge();
         scan.nextLine(); // czyszczenie bufora
-        System.out.println("Podaj datę urodzenia: ");
+        System.out.println("Podaj datę urodzenia (DD-MM-YYYY): ");
         String date = scan.nextLine();
+        // Walidacja formatu daty: musi być dokładnie 2 cyfry, myślnik, 2 cyfry, myślnik, 4 cyfry.
+        if(!date.matches("^\\d{2}-\\d{2}-\\d{4}$"))
+            throw new WrongDateOfBirth();
         (new Service()).addStudent(new Student(name, age, date));
     }
 
