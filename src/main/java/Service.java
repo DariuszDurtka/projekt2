@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 public class Service {
 
     public void addStudent(Student student) throws IOException {
@@ -20,10 +21,7 @@ public class Service {
         var f = new FileReader("db.txt");
         var reader = new BufferedReader(f);
         String line = "";
-        while (true) {
-            line = reader.readLine();
-            if(line == null)
-                break;
+        while ((line = reader.readLine()) != null) {
             ret.add(Student.Parse(line));
         }
         reader.close();
